@@ -9,8 +9,8 @@ repositories {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/JulianRecio/PrintScript")
         credentials {
-            username = ""
-            password = ""
+            username = "JuanPabloSenmartin"
+            password = "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"
         }
     }
 }
@@ -25,6 +25,8 @@ java {
 dependencies {
     testImplementation 'junit:junit:4.13'
     implementation 'org.example:interpreter:1.0.1'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    testImplementation 'junit:junit:4.13.1'
 }
 
 test {
