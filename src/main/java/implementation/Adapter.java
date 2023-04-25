@@ -20,6 +20,7 @@ public class Adapter {
         this.src = src;
         this.version = version;
         this.interpreter = createInterpreter(src, version);
+        interpreter.interpret();
     }
 
     private Interpreter createInterpreter(File src, String version) {
@@ -29,16 +30,16 @@ public class Adapter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Parser parser = new Parser(Lexer.tokenize(input));
-        return new Interpreter(parser.parse());
+        Parser parser = new Parser(Lexer.tokenize(input, 1.0));
+        return new Interpreter(parser.parse(1.0));
     }
 
 
     public List<String> getErrors() {
-        return null;
+        return interpreter.getErrors();
     }
 
     public List<String> getPrintedMessages() {
-        return null;
+        return interpreter.getPrinted();
     }
 }
