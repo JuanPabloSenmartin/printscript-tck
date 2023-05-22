@@ -4,14 +4,10 @@ package implementation;
 import ast.AST;
 import interpreter.Interpreter;
 import lexer.Lexer;
-import org.apache.commons.io.FileUtils;
 import parser.Parser;
 import token.Token;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +18,8 @@ public class Adapter {
     List<String> errors = new ArrayList<>();
 
 
-    public Adapter(File src, Double version) {
-        this.interpreter = createInterpreter(src, version);
+    public Adapter(InputStream input, Double version) {
+        this.interpreter = createInterpreter(input, version);
         try{
             interpreter.interpret();
         }catch (Exception e){
@@ -32,16 +28,10 @@ public class Adapter {
 
     }
 
-    private Interpreter createInterpreter(File src, Double version) {
-        String input;
-        try {
-            input = FileUtils.readFileToString(src, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private Interpreter createInterpreter(InputStream input, Double version) {
         List<Token> tokens = new ArrayList<>();
         try{
-            tokens = Lexer.tokenize(new ByteArrayInputStream(input.getBytes()), version);
+            tokens = Lexer.tokenize(input, version);
         }catch (Exception e){
             errors.add(e.getMessage());
         }

@@ -4,6 +4,7 @@ plugins {
 
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         name = "GitHubPackages"
@@ -19,6 +20,11 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(15)
     }
+}
+
+test {
+    minHeapSize = "5m" // initial heap size
+    maxHeapSize = "7m" // maximum heap size
 }
 
 
