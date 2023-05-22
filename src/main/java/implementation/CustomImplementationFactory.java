@@ -12,7 +12,7 @@ public class CustomImplementationFactory implements InterpreterFactory {
 //        throw new NotImplementedException("Needs implementation"); // TODO: implement
 
          return (src, version, emitter, handler, provider) -> {
-             Adapter adapter = new Adapter(src, version);
+             Adapter adapter = new Adapter(src, Double.parseDouble(version));
              for (String error : adapter.getErrors()){
                 handler.reportError(error);
              }

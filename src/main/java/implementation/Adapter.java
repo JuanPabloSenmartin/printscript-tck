@@ -1,30 +1,28 @@
 package implementation;
 
 
+import ast.AST;
 import interpreter.Interpreter;
 import lexer.Lexer;
-import lexer.Token;
 import org.apache.commons.io.FileUtils;
-import parser.AST;
 import parser.Parser;
+import token.Token;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class Adapter {
-    private Interpreter interpreter;
+    private final Interpreter interpreter;
 
     List<String> errors = new ArrayList<>();
 
-    List<String> print = new ArrayList<>();
 
-
-    public Adapter(File src, String version) {
+    public Adapter(File src, Double version) {
         this.interpreter = createInterpreter(src, version);
         try{
             interpreter.interpret();
@@ -34,7 +32,7 @@ public class Adapter {
 
     }
 
-    private Interpreter createInterpreter(File src, String version) {
+    private Interpreter createInterpreter(File src, Double version) {
         String input;
         try {
             input = FileUtils.readFileToString(src, StandardCharsets.UTF_8);
@@ -43,13 +41,13 @@ public class Adapter {
         }
         List<Token> tokens = new ArrayList<>();
         try{
-            tokens = Lexer.tokenize(input, Double.parseDouble(version));
+            tokens = Lexer.tokenize(new ByteArrayInputStream(input.getBytes()), version);
         }catch (Exception e){
             errors.add(e.getMessage());
         }
         AST ast = new AST(new ArrayList<>());
         try{
-            ast = new Parser(tokens).parse(Double.parseDouble(version));
+            ast = new Parser(tokens, version).parse();
         }catch (Exception e){
             errors.add(e.getMessage());
         }
@@ -58,8 +56,6 @@ public class Adapter {
 
 
     public List<String> getErrors() {
-//        return Stream.concat(errors.stream(), interpreter.getErrors().stream())
-//                .collect(Collectors.toList());
         return errors;
     }
 
