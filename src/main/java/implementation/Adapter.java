@@ -3,24 +3,35 @@ package implementation;
 
 import interpreter.Interpreter;
 import lexer.Lexer;
+import lexer.Token;
 import org.apache.commons.io.FileUtils;
+import parser.AST;
 import parser.Parser;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Adapter {
-    private File src;
-    private String version;
     private Interpreter interpreter;
 
+    List<String> errors = new ArrayList<>();
+
+    List<String> print = new ArrayList<>();
+
+
     public Adapter(File src, String version) {
-        this.src = src;
-        this.version = version;
         this.interpreter = createInterpreter(src, version);
-        interpreter.interpret();
+        try{
+            interpreter.interpret();
+        }catch (Exception e){
+            errors.add(e.getMessage());
+        }
+
     }
 
     private Interpreter createInterpreter(File src, String version) {
@@ -30,13 +41,26 @@ public class Adapter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Parser parser = new Parser(Lexer.tokenize(input, 1.0));
-        return new Interpreter(parser.parse(1.0));
+        List<Token> tokens = new ArrayList<>();
+        try{
+            tokens = Lexer.tokenize(input, Double.parseDouble(version));
+        }catch (Exception e){
+            errors.add(e.getMessage());
+        }
+        AST ast = new AST(new ArrayList<>());
+        try{
+            ast = new Parser(tokens).parse(Double.parseDouble(version));
+        }catch (Exception e){
+            errors.add(e.getMessage());
+        }
+        return new Interpreter(ast);
     }
 
 
     public List<String> getErrors() {
-        return interpreter.getErrors();
+//        return Stream.concat(errors.stream(), interpreter.getErrors().stream())
+//                .collect(Collectors.toList());
+        return errors;
     }
 
     public List<String> getPrintedMessages() {
