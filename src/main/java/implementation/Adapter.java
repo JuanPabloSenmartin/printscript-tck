@@ -31,7 +31,8 @@ public class Adapter {
     private Interpreter createInterpreter(InputStream input, Double version) {
         List<Token> tokens = new ArrayList<>();
         try{
-            tokens = Lexer.tokenize(input, version);
+            Lexer lexer = new Lexer(input, version);
+            tokens = lexer.tokenize();
         }catch (Exception e){
             errors.add(e.getMessage());
         }

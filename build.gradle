@@ -30,9 +30,9 @@ test {
 
 dependencies {
     testImplementation 'junit:junit:4.13'
-    implementation 'PrintScript:interpreter:1.1.16-SNAPSHOT'
-    implementation 'PrintScript:token:1.1.16-SNAPSHOT'
-    implementation 'PrintScript:ast:1.1.16-SNAPSHOT'
+    implementation 'PrintScript:interpreter:1.1.19-SNAPSHOT'
+    implementation 'PrintScript:token:1.1.19-SNAPSHOT'
+    implementation 'PrintScript:ast:1.1.19-SNAPSHOT'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     testImplementation 'junit:junit:4.13.1'
 }
