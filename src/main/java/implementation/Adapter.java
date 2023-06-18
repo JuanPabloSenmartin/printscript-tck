@@ -2,11 +2,13 @@ package implementation;
 
 
 import ast.AST;
+import interpreter.InputProvider;
 import interpreter.Interpreter;
 import lexer.Lexer;
 import parser.Parser;
 import token.Token;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +20,16 @@ public class Adapter {
     List<String> errors = new ArrayList<>();
 
 
-    public Adapter(InputStream input, Double version) {
+    public Adapter(InputStream input, Double version, InputProvider provider) {
         this.interpreter = createInterpreter(input, version);
+        //add input
+        String i = provider.input("");
+        if (i != null){
+            String readInput = i;
+            InputStream in = new ByteArrayInputStream(readInput.getBytes());
+            System.setIn(in);
+        }
+
         try{
             interpreter.interpret();
         }catch (Exception e){
