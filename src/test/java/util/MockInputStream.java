@@ -28,4 +28,9 @@ public class MockInputStream extends InputStream {
             return -1;
         }
     }
+
+    @Override
+    public int available(){
+        return lineNumber < numberOfLines ? 1 : 0;
+    }
 }
