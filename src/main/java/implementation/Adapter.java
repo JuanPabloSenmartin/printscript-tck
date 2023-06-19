@@ -2,6 +2,7 @@ package implementation;
 
 
 import ast.AST;
+import ast.node.Node;
 import interpreter.InputProvider;
 import interpreter.Interpreter;
 import lexer.Lexer;
@@ -9,9 +10,13 @@ import parser.Parser;
 import token.Token;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import com.google.common.collect.PeekingIterator;
 
 
 public class Adapter {
@@ -24,7 +29,7 @@ public class Adapter {
         this.interpreter = createInterpreter(input, version);
         //add input
         String i = provider.input("");
-        if (i != null){
+        if (i != null && !i.equals("")){
             String readInput = i;
             InputStream in = new ByteArrayInputStream(readInput.getBytes());
             System.setIn(in);
@@ -39,20 +44,21 @@ public class Adapter {
     }
 
     private Interpreter createInterpreter(InputStream input, Double version) {
-        List<Token> tokens = new ArrayList<>();
+        PeekingIterator<Token> tokenIterator = null;
         try{
-            Lexer lexer = new Lexer(input, version);
-            tokens = lexer.tokenize();
+            Lexer lexer = new Lexer(new PushbackInputStream(input), version);
+            tokenIterator = lexer.getTokenIterator();
         }catch (Exception e){
             errors.add(e.getMessage());
         }
-        AST ast = new AST(new ArrayList<>());
+        Iterator<Node> nodeIterator = null;
         try{
-            ast = new Parser(tokens, version).parse();
+            Parser parser = new Parser(tokenIterator, version);
+            nodeIterator = parser.getNodeIterator();
         }catch (Exception e){
             errors.add(e.getMessage());
         }
-        return new Interpreter(ast);
+        return new Interpreter(nodeIterator);
     }
 
 

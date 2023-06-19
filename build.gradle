@@ -30,11 +30,12 @@ test {
 
 dependencies {
     testImplementation 'junit:junit:4.13'
-    implementation 'PrintScript:interpreter:1.3.1-SNAPSHOT'
-    implementation 'PrintScript:token:1.3.1-SNAPSHOT'
-    implementation 'PrintScript:ast:1.3.1-SNAPSHOT'
+    implementation 'PrintScript:interpreter:2.0.2-SNAPSHOT'
+    implementation 'PrintScript:token:2.0.2-SNAPSHOT'
+    implementation 'PrintScript:ast:2.0.2-SNAPSHOT'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     testImplementation 'junit:junit:4.13.1'
+    implementation 'com.google.guava:guava:30.1-jre'
 }
 
 test {
